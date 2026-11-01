@@ -14,7 +14,7 @@ The HTTP API base is `DEALPUFFIN_API_BASE` or `https://dealpuffin.com`. Search a
 | `connect_stripe` | yes | `restricted_key`. Imports. Reasons come back. The code comes back only when `list_my_coupons` is also enabled. |
 | `sync_coupons` | yes | Fetch again with the stored key. Does not publish. The code comes back only when `list_my_coupons` is also enabled. |
 | `publish_coupon` | yes | `coupon_id` and `product` slug. Makes that imported coupon claimable on that listing. |
-| `list_wishes` | no | `product` or `category`. |
+| `list_wishes` | category and product, no; `mine`, yes | `category` for open wishes. `mine: true` for wishes on products this account submitted, optionally with `category` or `product`. |
 | `create_wish` | yes | `body`, and `product` or `category`. Optional `target_percent`, `target_months`. |
 | `list_categories` | no | Categories and subcategories. Submit with a subcategory slug, the one that has a parent. Use `other-software` when nothing else fits. |
 | `submit_feedback` | yes | `kind` (`feature`, `issue`, or `friction`), `body`, optional `context`. No Stripe keys or promotion codes. `POST /api/v1/feedback` |

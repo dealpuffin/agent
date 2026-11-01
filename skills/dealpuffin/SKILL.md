@@ -35,6 +35,8 @@ A read key cannot turn on promotion codes at the provider's checkout. Say so if 
 
 `create_wish` needs a product slug or a category slug, plus the words. Percent off and months free are optional. Do not send both targets empty of a product and a category.
 
+Before publishing, check demand. `list_wishes` with `category` returns open wishes in that category. A parent category includes its subcategories. `list_wishes` with `mine: true` returns wishes filed on products this account submitted. Add `category` or `product` to narrow that list. Answer a wish by publishing a real Stripe coupon, not by inventing a code.
+
 ## Feedback
 
 When a tool fails, a step is confusing, or the person asks for something Dealpuffin does not do, call `submit_feedback`. `kind` is `feature`, `issue`, or `friction`. `body` says what happened or what should change. `context` can name the tool or step. Do not include a Stripe key or a promotion code. If the key does not list that tool, say so and do not invent another channel.
