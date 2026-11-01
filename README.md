@@ -6,7 +6,13 @@ Search returns terms only. `reveal_offer` reads the promotion code and counts as
 
 ## Install
 
-In Cursor, add the remote server. OAuth asks the person to sign in. That agent can act as them until they remove it at Settings.
+```bash
+npx skills add TestChimp/dealpuffin-agent/skill -g -y
+```
+
+That installs the skill for your agents. The skill uses the remote MCP server. OAuth asks the person to sign in. That agent can act as them until they remove it at Settings.
+
+In Cursor, you can also add the remote server by hand.
 
 ```json
 {
