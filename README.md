@@ -7,7 +7,7 @@ Search returns terms only. `reveal_offer` reads the promotion code and counts as
 ## Install
 
 ```bash
-npx skills add TestChimp/dealpuffin-agent/skill -g -y
+npx skills add dealpuffin/agent -g -y
 ```
 
 That installs the skill for your agents. The skill uses the remote MCP server. OAuth asks the person to sign in. That agent can act as them until they remove it at Settings.
@@ -41,11 +41,11 @@ Any signed-in account can instead create an API key at [https://dealpuffin.com/s
 
 A local stdio server is in `mcp/server.js` for clients that cannot open a remote URL. Set `DEALPUFFIN_TOKEN` to the same API key. It offers only the tools that key has.
 
-Install the skill by linking `skill/` to `~/.cursor/skills/dealpuffin`:
+Install the skill by linking `skills/dealpuffin` to `~/.cursor/skills/dealpuffin`:
 
 ```bash
 mkdir -p ~/.cursor/skills
-ln -s /absolute/path/to/dealpuffin-agent/skill ~/.cursor/skills/dealpuffin
+ln -s /absolute/path/to/agent/skills/dealpuffin ~/.cursor/skills/dealpuffin
 ```
 
 The skill tells the agent when to search, when a code is eligible, and how to submit without inventing a discount.
