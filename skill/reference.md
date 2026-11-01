@@ -1,6 +1,6 @@
 # Dealpuffin tools
 
-Remote MCP: `https://mcp.dealpuffin.com/mcp`. OAuth, or an API key from https://dealpuffin.com/stripe as `Authorization: Bearer`.
+Remote MCP: `https://mcp.dealpuffin.com/mcp`. OAuth, or an API key from https://dealpuffin.com/settings/api-keys as `Authorization: Bearer`. A key can call only the tools selected when it was created.
 
 The HTTP API base is `DEALPUFFIN_API_BASE` or `https://dealpuffin.com`. Search and get do not need a key. Every other call does.
 

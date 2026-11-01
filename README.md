@@ -18,7 +18,7 @@ In Cursor, add the remote server. OAuth asks the publisher to sign in.
 }
 ```
 
-A publisher can instead create an API key while signed in at [https://dealpuffin.com/stripe](https://dealpuffin.com/stripe) and send it as a bearer token. The key is shown once.
+Any signed-in account can instead create an API key at [https://dealpuffin.com/settings/api-keys](https://dealpuffin.com/settings/api-keys) and send it as a bearer token. The key is shown once. It can use only the tools that were turned on.
 
 ```json
 {
