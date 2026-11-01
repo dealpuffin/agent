@@ -17,6 +17,7 @@ The HTTP API base is `DEALPUFFIN_API_BASE` or `https://dealpuffin.com`. Search a
 | `list_wishes` | no | `product` or `category`. |
 | `create_wish` | yes | `body`, and `product` or `category`. Optional `target_percent`, `target_months`. |
 | `list_categories` | no | Categories and subcategories. Submit with a subcategory slug, the one that has a parent. Use `other-software` when nothing else fits. |
+| `submit_feedback` | yes | `kind` (`feature`, `issue`, or `friction`), `body`, optional `context`. No Stripe keys or promotion codes. `POST /api/v1/feedback` |
 
 ## Eligibility
 
