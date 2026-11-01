@@ -135,6 +135,18 @@ async function api(path, { method = "GET", body, auth = false } = {}) {
   return payload;
 }
 
+const publicTools = new Set(["search_offers", "get_offer", "list_wishes", "list_categories"]);
+let allowedNames;
+
+async function visibleTools() {
+  if (!TOKEN) return tools.filter((tool) => publicTools.has(tool.name));
+  if (!allowedNames) {
+    const payload = await api("/api/v1/tools", { auth: true });
+    allowedNames = new Set(payload.tools || []);
+  }
+  return tools.filter((tool) => allowedNames.has(tool.name));
+}
+
 async function callTool(name, args) {
   switch (name) {
     case "search_offers": {
@@ -201,11 +213,18 @@ async function handle(message) {
     return;
   }
   if (method === "tools/list") {
-    result(id, { tools });
+    visibleTools()
+      .then((allowed) => result(id, { tools: allowed }))
+      .catch((error) => failure(id, error.message));
     return;
   }
   if (method === "tools/call") {
     try {
+      const allowed = await visibleTools();
+      if (!allowed.some((tool) => tool.name === params?.name)) {
+        result(id, { content: [{ type: "text", text: "This API key cannot use that tool." }], isError: true });
+        return;
+      }
       const payload = await callTool(params?.name, params?.arguments || {});
       result(id, { content: [{ type: "text", text: JSON.stringify(payload, null, 2) }] });
     } catch (error) {

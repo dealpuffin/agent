@@ -1,6 +1,6 @@
 # Dealpuffin tools
 
-Remote MCP: `https://mcp.dealpuffin.com/mcp`. OAuth, or an API key from https://dealpuffin.com/settings/api-keys as `Authorization: Bearer`. A key can call only the tools selected when it was created.
+Remote MCP: `https://mcp.dealpuffin.com/mcp`. OAuth signs the person in. Or send an API key from https://dealpuffin.com/settings/api-keys as `Authorization: Bearer`. A key can call only the tools selected when it was created. `sync_coupons` and `connect_stripe` omit the code unless that key also has `list_my_coupons`. The person can remove an OAuth agent on that same settings page.
 
 The HTTP API base is `DEALPUFFIN_API_BASE` or `https://dealpuffin.com`. Search and get do not need a key. Every other call does.
 
@@ -11,8 +11,8 @@ The HTTP API base is `DEALPUFFIN_API_BASE` or `https://dealpuffin.com`. Search a
 | `reveal_offer` | yes | Returns the code and counts one claim for this user. |
 | `list_my_coupons` | yes | This account's synced coupons, including codes they own, and why each is listed or not. |
 | `submit_product` | yes | `name`, `url`, `category`, `description`, `stripe_product_ids`. |
-| `connect_stripe` | yes | `restricted_key`. Syncs. Response includes listed and held reasons. |
-| `sync_coupons` | yes | Fetch again with the stored key. Does not publish. |
+| `connect_stripe` | yes | `restricted_key`. Imports. Reasons come back. The code comes back only when `list_my_coupons` is also enabled. |
+| `sync_coupons` | yes | Fetch again with the stored key. Does not publish. The code comes back only when `list_my_coupons` is also enabled. |
 | `publish_coupon` | yes | `coupon_id` and `product` slug. Makes that imported coupon claimable on that listing. |
 | `list_wishes` | no | `product` or `category`. |
 | `create_wish` | yes | `body`, and `product` or `category`. Optional `target_percent`, `target_months`. |

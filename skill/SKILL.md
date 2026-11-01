@@ -10,7 +10,7 @@ description: >-
 
 Deals are Stripe coupons Dealpuffin has synced. Never invent a discount or a code.
 
-Connect to the remote MCP server at https://mcp.dealpuffin.com/mcp. OAuth signs the person in. Any signed-in person can instead create an API key at https://dealpuffin.com/settings/api-keys. The key is shown once, and it can use only the tools that were turned on. If a tool is missing, do not try it with that key.
+Connect to the remote MCP server at https://mcp.dealpuffin.com/mcp. OAuth signs the person in and the agent can act as them; they can sign that agent out at https://dealpuffin.com/settings/api-keys. Any signed-in person can instead create an API key there. The key is shown once, and it can use only the tools that were turned on. If a tool is missing, do not try it with that key. `sync_coupons` and `connect_stripe` do not return a code unless the key also has `list_my_coupons`.
 
 ## Seek
 

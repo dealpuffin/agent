@@ -6,7 +6,7 @@ Search returns terms only. `reveal_offer` reads the promotion code and counts as
 
 ## Install
 
-In Cursor, add the remote server. OAuth asks the publisher to sign in.
+In Cursor, add the remote server. OAuth asks the person to sign in. That agent can act as them until they remove it at Settings.
 
 ```json
 {
@@ -33,7 +33,7 @@ Any signed-in account can instead create an API key at [https://dealpuffin.com/s
 }
 ```
 
-A local stdio server is in `mcp/server.js` for clients that cannot open a remote URL. Set `DEALPUFFIN_TOKEN` to the same API key.
+A local stdio server is in `mcp/server.js` for clients that cannot open a remote URL. Set `DEALPUFFIN_TOKEN` to the same API key. It offers only the tools that key has.
 
 Install the skill by linking `skill/` to `~/.cursor/skills/dealpuffin`:
 
