@@ -23,7 +23,7 @@ A code is listed only when the founder published that coupon, it has an active p
 
 ## Submit
 
-1. `submit_product` with name, https URL, category slug, and any Stripe product ids (`prod_...`).
+1. `submit_product` with name, https URL, a subcategory slug from `list_categories`, and any Stripe product ids (`prod_...`). Use `other-software` when nothing else fits.
 2. Ask for a restricted key that starts with `rk_`. Refuse a secret key (`sk_`). It needs read access to Coupons and Promotion codes.
 3. `connect_stripe` with that key. It imports coupons immediately and does not publish them. Do not log the key or repeat it back.
 4. Read `listed` and `reasons`. Sync imports coupons and does not publish them. Say which ones are imported and which are held back, in the words the tool returns.
