@@ -6,23 +6,34 @@ Search returns terms only. `reveal_offer` reads the promotion code and counts as
 
 ## Install
 
-Clone this repo. In Cursor, add an MCP server:
+In Cursor, add the remote server. OAuth asks the publisher to sign in.
 
 ```json
 {
   "mcpServers": {
     "dealpuffin": {
-      "command": "node",
-      "args": ["/absolute/path/to/dealpuffin-agent/mcp/server.js"],
-      "env": {
-        "DEALPUFFIN_TOKEN": "dp_..."
+      "url": "https://mcp.dealpuffin.com/mcp"
+    }
+  }
+}
+```
+
+A publisher can instead create an API key while signed in at [https://dealpuffin.com/stripe](https://dealpuffin.com/stripe) and send it as a bearer token. The key is shown once.
+
+```json
+{
+  "mcpServers": {
+    "dealpuffin": {
+      "url": "https://mcp.dealpuffin.com/mcp",
+      "headers": {
+        "Authorization": "Bearer dp_..."
       }
     }
   }
 }
 ```
 
-Create the token while signed in at [https://dealpuffin.com/stripe](https://dealpuffin.com/stripe). Search works with the token omitted. Submitting and revealing need it.
+A local stdio server is in `mcp/server.js` for clients that cannot open a remote URL. Set `DEALPUFFIN_TOKEN` to the same API key.
 
 Install the skill by linking `skill/` to `~/.cursor/skills/dealpuffin`:
 

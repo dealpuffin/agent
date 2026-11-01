@@ -1,6 +1,8 @@
 # Dealpuffin tools
 
-Base URL is `DEALPUFFIN_API_BASE` or `https://dealpuffin.com`. Send `Authorization: Bearer DEALPUFFIN_TOKEN` except for search and get.
+Remote MCP: `https://mcp.dealpuffin.com/mcp`. OAuth, or an API key from https://dealpuffin.com/stripe as `Authorization: Bearer`.
+
+The HTTP API base is `DEALPUFFIN_API_BASE` or `https://dealpuffin.com`. Search and get do not need a key. Every other call does.
 
 | Tool | Auth | What it does |
 | --- | --- | --- |

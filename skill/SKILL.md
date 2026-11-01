@@ -10,7 +10,7 @@ description: >-
 
 Deals are Stripe coupons Dealpuffin has synced. Never invent a discount or a code.
 
-The MCP server is `dealpuffin`. Set `DEALPUFFIN_TOKEN` before submitting or revealing. Search works without it.
+Connect to the remote MCP server at https://mcp.dealpuffin.com/mcp. OAuth signs the person in. A publisher can instead create an API key at https://dealpuffin.com/stripe and send it as the bearer token. The key is shown once.
 
 ## Seek
 
