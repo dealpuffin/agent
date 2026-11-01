@@ -57,7 +57,7 @@ const tools = [
   },
   {
     name: "connect_stripe",
-    description: "Store a restricted Stripe read key (rk_) and sync coupons. Never send a secret key.",
+    description: "Store a restricted Stripe read key (rk_) and import coupons. Never send a secret key. Import does not publish coupons.",
     inputSchema: {
       type: "object",
       properties: { restricted_key: { type: "string" } },
@@ -66,19 +66,19 @@ const tools = [
   },
   {
     name: "sync_coupons",
-    description: "Sync coupons again with the stored restricted key.",
+    description: "Fetch coupons from Stripe again with the stored restricted key. Does not publish them.",
     inputSchema: { type: "object", properties: {} },
   },
   {
-    name: "assign_coupon",
-    description: "Attach an unrestricted Stripe coupon to one of the provider's products.",
+    name: "publish_coupon",
+    description: "Publish one imported coupon so seekers can claim it. product is the listing slug. A coupon Stripe limited to product ids can only be published on a listing that carries one of those ids. Omit product only when every matching listing should get it.",
     inputSchema: {
       type: "object",
       properties: {
         coupon_id: { type: "string" },
         product: { type: "string", description: "Product slug." },
       },
-      required: ["coupon_id", "product"],
+      required: ["coupon_id"],
     },
   },
   {
@@ -155,8 +155,8 @@ async function callTool(name, args) {
       return api("/api/v1/stripe", { method: "POST", auth: true, body: { restricted_key: args.restricted_key } });
     case "sync_coupons":
       return api("/api/v1/stripe", { method: "POST", auth: true, body: {} });
-    case "assign_coupon":
-      return api("/api/v1/stripe/assign", { method: "POST", auth: true, body: args });
+    case "publish_coupon":
+      return api("/api/v1/stripe/publish", { method: "POST", auth: true, body: args });
     case "list_wishes": {
       const params = new URLSearchParams();
       if (args.product) params.set("product", args.product);

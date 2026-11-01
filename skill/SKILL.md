@@ -19,15 +19,15 @@ The MCP server is `dealpuffin`. Set `DEALPUFFIN_TOKEN` before submitting or reve
 3. `reveal_offer` when they want the code. That is their one claim. Calling it again returns the same code and does not count twice.
 4. They paste the code at the product's own checkout. Dealpuffin does not apply it.
 
-A code is listed only when it has an active promotion code, Stripe has not locked that code to one customer, it is inside both expiries, both caps still have room, and it is attached to a product. Details are in [reference.md](reference.md).
+A code is listed only when the founder published that coupon, it has an active promotion code, Stripe has not locked that code to one customer, it is inside both expiries, and both caps still have room. Details are in [reference.md](reference.md).
 
 ## Submit
 
 1. `submit_product` with name, https URL, category slug, and any Stripe product ids (`prod_...`).
 2. Ask for a restricted key that starts with `rk_`. Refuse a secret key (`sk_`). It needs read access to Coupons and Promotion codes.
-3. `connect_stripe` with that key. It syncs immediately. Do not log the key or repeat it back.
-4. Read `listed` and `reasons`. Say which codes will appear and which stay off, in the words the tool returns.
-5. If a coupon has no Stripe product limit, `assign_coupon` to one of their listings. If it is limited to a `prod_` id, `submit_product` or the site must carry that id, then sync again.
+3. `connect_stripe` with that key. It imports coupons immediately and does not publish them. Do not log the key or repeat it back.
+4. Read `listed` and `reasons`. Sync imports coupons and does not publish them. Say which ones are imported and which are held back, in the words the tool returns.
+5. `publish_coupon` only for coupons the founder wants seekers to claim. Pass `coupon_id` and the product slug. A coupon Stripe limited to `prod_` ids can only be published on a listing that carries one of those ids.
 
 A read key cannot turn on promotion codes at the provider's checkout. Say so if they expect the code to work there.
 
