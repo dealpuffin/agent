@@ -1,0 +1,37 @@
+# Dealpuffin tools
+
+Base URL is `DEALPUFFIN_API_BASE` or `https://dealpuffin.com`. Send `Authorization: Bearer DEALPUFFIN_TOKEN` except for search and get.
+
+| Tool | Auth | What it does |
+| --- | --- | --- |
+| `search_offers` | no | `q` and `category` optional. Terms only. No code. |
+| `get_offer` | no | One offer by id. No code. |
+| `reveal_offer` | yes | Returns the code and counts one claim for this user. |
+| `list_my_coupons` | yes | This account's synced coupons, including codes they own, and why each is listed or not. |
+| `submit_product` | yes | `name`, `url`, `category`, `description`, `stripe_product_ids`. |
+| `connect_stripe` | yes | `restricted_key`. Syncs. Response includes listed and held reasons. |
+| `sync_coupons` | yes | Sync again with the stored key. |
+| `assign_coupon` | yes | `coupon_id`, `product` slug. Only for a coupon Stripe did not limit to a product. |
+| `list_wishes` | no | `product` or `category`. |
+| `create_wish` | yes | `body`, and `product` or `category`. Optional `target_percent`, `target_months`. |
+| `list_categories` | no | Category slugs to use when submitting. |
+
+## Eligibility
+
+Listed:
+
+- There is a promotion code a customer can type.
+- The code is active.
+- Stripe has not locked it to one customer.
+- It is before the Stripe expiry and before any earlier Dealpuffin expiry.
+- Stripe's cap and any tighter Dealpuffin cap still have room.
+- The coupon is attached to a Dealpuffin product, either because the Stripe product id matches or because the owner assigned an unrestricted coupon.
+
+Held back, and still stored:
+
+- No promotion code.
+- Locked to one Stripe customer.
+- Inactive, expired, over a cap, or hidden.
+- Not attached to a product.
+
+One coupon with several codes is several offers. A leaked code can still work at Stripe after the Dealpuffin cap. Say that when you quote a cap.
