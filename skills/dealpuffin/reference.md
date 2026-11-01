@@ -2,7 +2,7 @@
 
 Remote MCP: `https://mcp.dealpuffin.com/mcp`. OAuth signs the person in. Or send an API key from https://dealpuffin.com/settings/api-keys as `Authorization: Bearer`. A key can call only the tools selected when it was created. `sync_coupons` and `connect_stripe` omit the code unless that key also has `list_my_coupons`. The person can remove an OAuth agent on that same settings page.
 
-The HTTP API base is `DEALPUFFIN_API_BASE` or `https://dealpuffin.com`. Search and get do not need a key. Every other call does.
+The HTTP API base is `DEALPUFFIN_API_BASE` or `https://dealpuffin.com`. Search, get, `list_categories`, and `list_wishes` for a category or a product do not need a key. `list_wishes` with `mine` does. Every other call does.
 
 | Tool | Auth | What it does |
 | --- | --- | --- |
