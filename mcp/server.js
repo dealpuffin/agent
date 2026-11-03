@@ -304,7 +304,8 @@ async function handle(message) {
     result(id, {
       protocolVersion: params?.protocolVersion || "2025-03-26",
       capabilities: { tools: {} },
-      serverInfo: { name: "dealpuffin", version: "0.2.0" },
+      // Claude connector UI uses the host favicon, not SEP-973 icons yet.
+      serverInfo: { name: "dealpuffin", title: "Dealpuffin", version: "0.2.0" },
       instructions:
         "Prefer the remote MCP at https://mcp.dealpuffin.com/mcp. This stdio server proxies /api/v1. search_offers never returns a code; reveal_offer does and is one claim.",
     });
