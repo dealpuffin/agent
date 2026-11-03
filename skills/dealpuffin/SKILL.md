@@ -7,7 +7,7 @@ description: >-
   points, or leave a product review. On first use in a session, follow the
   Preamble so the installed copy matches metadata.version on main.
 metadata:
-  version: 1.1.3
+  version: 1.1.4
   homepage: "https://dealpuffin.com"
   source: "https://github.com/dealpuffin/agent"
 ---
@@ -57,6 +57,7 @@ Filing wishes is website-only. Use `list_wishes` to read demand; do not invent a
 2. Billing: ask for a read key — Stripe `rk_` (refuse `sk_`), Paddle `pdl_*` with `discount.read`, or Polar `polar_oat_` with `discounts:read`. `connect_coupon_provider` with `product`, `provider`, `token`. Omit `token` later to sync again. Do not log or echo the key.
 3. Read returned eligibility. `publish_coupon` with `coupon_id` for coupons to list; `published: false` unpublishes; optional `claim_limit`.
 4. Listing copy/media: `get_product`, then `update_product` with only changed fields. Screenshots: pass full set when changing — `{ id }` keep, `{ data }` upload base64/data URL. `hidden` toggles catalog visibility. `verify: true` re-checks DNS.
+5. Optional Featured on Dealpuffin badge: owner `get_product` includes `badge.snippet`. Have the founder (or you) paste it on their site, then `update_product` with `verify_badge: true` (optional `badge_page_url` if not on the homepage). Catalog highlight applies only while the crawl finds the badge.
 
 ## Proof points
 

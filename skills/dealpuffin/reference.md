@@ -15,7 +15,7 @@ Fourteen tools. Read tools are annotated read-only; write tools are destructive 
 | `list_wishes` | category/product no; `mine` yes | Demand signal. Filing wishes is website-only. |
 | `list_my_coupons` | yes | Owner imports with codes + reasons. |
 | `submit_product` | yes | Create listing from `url` + category. |
-| `update_product` | yes | Patch listing; optional `hidden`, `verify`, screenshots, video_url. `PATCH /api/v1/products/:slug` |
+| `update_product` | yes | Patch listing; optional `hidden`, `verify`, screenshots, video_url, `badge_page_url`, `verify_badge`. Owner `get_product` includes `badge`. `PATCH /api/v1/products/:slug` |
 | `connect_coupon_provider` | yes | Connect/replace key + import, or omit `token` to sync. |
 | `publish_coupon` | yes | `coupon_id`, optional `published`, `claim_limit`. |
 | `connect_proof_point` | yes | Connect provider + first read. |
