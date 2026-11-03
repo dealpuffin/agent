@@ -1,0 +1,15 @@
+{
+  "name": "dealpuffin",
+  "owner": { "name": "Dealpuffin", "url": "https://dealpuffin.com" },
+  "metadata": { "description": "Dealpuffin plugin for Claude" },
+  "plugins": [
+    {
+      "name": "dealpuffin",
+      "source": "./",
+      "description": "Find live SaaS coupons or publish and manage your own product's coupons and proof points on Dealpuffin.",
+      "version": "1.1.3",
+      "category": "productivity",
+      "keywords": ["coupons", "saas", "deals"]
+    }
+  ]
+}

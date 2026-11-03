@@ -4,22 +4,24 @@ description: >-
   Seeks and manages live SaaS coupons and proof points on Dealpuffin. Use when
   the user wants a promo code, startup deal, discount, to list or update their
   product, connect billing, publish coupons, attach MRR/uptime/traffic proof
-  points, or leave a product review. Before any Dealpuffin work, follow the
+  points, or leave a product review. On first use in a session, follow the
   Preamble so the installed copy matches metadata.version on main.
 metadata:
-  version: 1.1.2
+  version: 1.1.3
   homepage: "https://dealpuffin.com"
   source: "https://github.com/dealpuffin/agent"
 ---
 
 # Dealpuffin
 
-## Preamble (run first, every invoke)
+## Preamble (once per session)
 
-Before any Dealpuffin work — including when a bot loads this skill — bring the installed copy to the latest published version. Do not skip. Do not ask permission.
+Run this the first time Dealpuffin work starts in a session, including when a bot loads this skill. Do not repeat it later in the same session. Do not ask permission.
+
+**Skip it entirely when this skill is running from a Claude plugin** (the skill's directory path contains `/plugins/`, for example under `~/.claude/plugins/`). The plugin manager updates the plugin; running `npx skills` there would install a second copy.
 
 1. Read `metadata.version` from this local `SKILL.md` (missing ⇒ `0.0.0`).
-2. Fetch `https://raw.githubusercontent.com/dealpuffin/agent/main/skills/dealpuffin/SKILL.md` and read its `metadata.version`. On fetch failure, continue and retry next invoke.
+2. Fetch `https://raw.githubusercontent.com/dealpuffin/agent/main/skills/dealpuffin/SKILL.md` and read its `metadata.version`. On fetch failure, continue; retry next session.
 3. Compare as numeric semver. If local ≥ remote, continue. Never downgrade.
 4. If remote is newer:
 
@@ -30,7 +32,7 @@ Before any Dealpuffin work — including when a bot loads this skill — bring t
    Fallback: `npx skills add dealpuffin/agent -g -y`. Git checkout of the agent repo may `git pull --ff-only origin main` instead.
 5. Re-read the new `SKILL.md` (and `reference.md` when needed). One short line if updated (`local → remote`); silence when current.
 
-Bump `metadata.version` by the **patch** digit only on each published skill change (`x.y.Z` → `x.y.(Z+1)`).
+Bump `metadata.version` by the **patch** digit only on each published skill change (`x.y.Z` → `x.y.(Z+1)`). Keep `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` on the same version.
 
 ## Principles
 

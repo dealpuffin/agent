@@ -2,7 +2,7 @@
 
 Remote MCP: `https://mcp.dealpuffin.com/mcp`. OAuth or `Authorization: Bearer` API key from https://dealpuffin.com/settings/api-keys. Keys only see tools selected at creation.
 
-On every invoke, follow **Preamble** in `SKILL.md` (patch version check → `npx skills update dealpuffin -g -y`).
+On the first use in a session, follow **Preamble** in `SKILL.md` (skipped in a Claude plugin).
 
 Fourteen tools. Read tools are annotated read-only; write tools are destructive (Claude Connectors).
 

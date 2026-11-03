@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "dealpuffin": {
+      "type": "http",
+      "url": "https://mcp.dealpuffin.com/mcp"
+    }
+  }
+}
