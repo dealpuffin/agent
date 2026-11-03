@@ -1,8 +1,8 @@
 # Dealpuffin agent
 
-A skill and an MCP server that teach an agent to seek SaaS coupons on Dealpuffin and to submit a product's Stripe coupons.
+A skill and an MCP server that teach an agent to seek SaaS coupons on Dealpuffin, submit a product's coupons, and attach proof points (MRR, uptime, traffic).
 
-Search returns terms only. `reveal_offer` reads the promotion code and counts as that user's one claim. `connect_stripe` imports from a restricted read key (`rk_`), never a secret key.
+Search returns terms only. `reveal_offer` reads the promotion code and counts as that user's one claim. `connect_coupon_provider` imports from a restricted read key (`rk_` for Stripe), never a secret key. `connect_proof_point` attaches a verified reading; confirm with `get_product`.
 
 ## Install
 
@@ -11,6 +11,8 @@ npx skills add dealpuffin/agent -g -y
 ```
 
 That installs the skill for your agents. The skill uses the remote MCP server. OAuth asks the person to sign in. That agent can act as them until they remove it at Settings.
+
+`skills/dealpuffin/SKILL.md` carries `metadata.version`. Agents are instructed to compare that to `main` on every invoke and run `npx skills update dealpuffin -g -y` when behind, so they follow the latest instructions. Bump the version whenever you change the skill.
 
 In Cursor, you can also add the remote server by hand.
 
