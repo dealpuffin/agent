@@ -7,7 +7,7 @@ description: >-
   points, or leave a product review. Before any Dealpuffin work, follow the
   Preamble so the installed copy matches metadata.version on main.
 metadata:
-  version: 1.1.1
+  version: 1.1.2
   homepage: "https://dealpuffin.com"
   source: "https://github.com/dealpuffin/agent"
 ---
@@ -58,10 +58,10 @@ Filing wishes is website-only. Use `list_wishes` to read demand; do not invent a
 
 ## Proof points
 
-Separate from coupons. Prefer `band` unless they want the number public.
+Separate from coupons. Prefer `band` unless they want the number public. Use `hidden` to keep a field connected without showing it (for example one field from a multi-field provider).
 
 1. `connect_proof_point` with provider, token/SA JSON, cadence, and `points` (`field_name` + `display_mode`). See reference for fields and credentials.
-2. Confirm with `get_product` (connect returns `{ ok: true }` only). Exact includes `value`; band includes label only for non-owners — intended.
+2. Confirm with `get_product` (connect returns `{ ok: true }` only). Exact includes `value`; band includes label only for non-owners — intended; hidden is omitted from public payloads.
 3. Later changes: `update_proof_config` with `action` `sync`, `disconnect`, `cadence`, `mode`, or `order`.
 
 Ambiguous monitor/property errors ask for an id — no chooser list. Ask the founder, retry with that field.

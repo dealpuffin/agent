@@ -33,7 +33,7 @@ Fourteen tools. Read tools are annotated read-only; write tools are destructive 
 | `gcp-monitoring` | `Uptime` | SA JSON (Monitoring Viewer); `check_id` if ambiguous |
 | `google-analytics` | `Traffic` | SA JSON (GA4 Viewer); `property_id` if ambiguous |
 
-Cadence: `daily` \| `weekly` \| `monthly`. Display: `exact` \| `band`.
+Cadence: `daily` \| `weekly` \| `monthly`. Display: `exact` \| `band` \| `hidden` (`hidden` stays synced but is omitted from the public listing).
 
 ## Eligibility (listed offers)
 
@@ -42,5 +42,6 @@ Active promotion code; not locked to one customer; inside Stripe and Dealpuffin 
 ## Intentional limits
 
 - Banded proofs: non-owners get label (and color when applicable), not the number.
+- Hidden proofs: omitted from public payloads; owner can change `display_mode` with `update_proof_config`.
 - Create wish: website only.
 - API key / OAuth revoke: Settings on the website.
