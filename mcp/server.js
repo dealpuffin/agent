@@ -1,113 +1,197 @@
 #!/usr/bin/env node
-// Dealpuffin MCP server. Speaks stdio JSON-RPC and calls the Dealpuffin HTTP API.
-// Search never returns a code. reveal_offer does, and it counts as a claim.
+// Dealpuffin MCP over stdio. Proxies the Dealpuffin HTTP API for clients that cannot use the remote URL.
+// Prefer https://mcp.dealpuffin.com/mcp when the host supports remote MCP.
 
 const API = (process.env.DEALPUFFIN_API_BASE || "https://dealpuffin.com").replace(/\/$/, "");
 const TOKEN = process.env.DEALPUFFIN_TOKEN || "";
 
+function readOnly(title) {
+  return { title, readOnlyHint: true };
+}
+function destructive(title) {
+  return { title, destructiveHint: true };
+}
+
 const tools = [
   {
     name: "search_offers",
-    description: "Search listed Dealpuffin offers. Does not return promotion codes.",
+    description: "Search listed Dealpuffin offers by query and/or category, or pass id for one offer. Omits promotion codes.",
+    annotations: readOnly("Search offers"),
     inputSchema: {
       type: "object",
       properties: {
-        q: { type: "string", description: "Product, description, or category text." },
-        category: { type: "string", description: "Category slug." },
+        q: { type: "string" },
+        category: { type: "string" },
+        id: { type: "string" },
       },
-    },
-  },
-  {
-    name: "get_offer",
-    description: "Get one listed offer by id. Does not return the promotion code.",
-    inputSchema: {
-      type: "object",
-      properties: { id: { type: "string" } },
-      required: ["id"],
     },
   },
   {
     name: "reveal_offer",
-    description: "Read the promotion code for an offer. Counts as this user's one claim. A repeat call returns the same code.",
+    description: "Reveal the promotion code for one listed offer. One claim per user per coupon.",
+    annotations: destructive("Reveal offer code"),
+    inputSchema: { type: "object", properties: { id: { type: "string" } }, required: ["id"] },
+  },
+  {
+    name: "get_product",
+    description: "Read one product listing including media, public proof points, and reviews.",
+    annotations: readOnly("Get product"),
+    inputSchema: { type: "object", properties: { slug: { type: "string" } }, required: ["slug"] },
+  },
+  {
+    name: "list_categories",
+    description: "List categories and subcategories.",
+    annotations: readOnly("List categories"),
+    inputSchema: { type: "object", properties: {} },
+  },
+  {
+    name: "list_wishes",
+    description: "List wishes for demand signal. Pass category, product, and/or mine.",
+    annotations: readOnly("List wishes"),
     inputSchema: {
       type: "object",
-      properties: { id: { type: "string" } },
-      required: ["id"],
+      properties: { category: { type: "string" }, product: { type: "string" }, mine: { type: "boolean" } },
     },
   },
   {
     name: "list_my_coupons",
-    description: "List coupons synced from the signed-in provider's Stripe account, with the code and why each is listed or held back.",
-    inputSchema: { type: "object", properties: {} },
+    description: "List coupons imported for one of your products.",
+    annotations: readOnly("List my coupons"),
+    inputSchema: { type: "object", properties: { product: { type: "string" } }, required: ["product"] },
   },
   {
     name: "submit_product",
-    description: "Create a product listing. stripe_product_ids are Stripe ids like prod_123.",
+    description: "Create a product listing from its URL and a subcategory.",
+    annotations: destructive("Submit product"),
     inputSchema: {
       type: "object",
       properties: {
-        name: { type: "string" },
         url: { type: "string" },
         category: { type: "string" },
+        categories: { type: "array", items: { type: "string" } },
+        name: { type: "string" },
+        title: { type: "string" },
         description: { type: "string" },
-        stripe_product_ids: { type: "array", items: { type: "string" } },
+        logo_url: { type: "string" },
       },
-      required: ["name", "url", "category"],
+      required: ["url", "category"],
     },
   },
   {
-    name: "connect_stripe",
-    description: "Store a restricted Stripe read key (rk_) and import coupons. Never send a secret key. Import does not publish coupons.",
+    name: "update_product",
+    description: "Update one of your listings. Omit fields to leave them unchanged.",
+    annotations: destructive("Update product"),
     inputSchema: {
       type: "object",
-      properties: { restricted_key: { type: "string" } },
-      required: ["restricted_key"],
+      properties: {
+        product: { type: "string" },
+        name: { type: "string" },
+        title: { type: "string" },
+        url: { type: "string" },
+        category: { type: "string" },
+        categories: { type: "array", items: { type: "string" } },
+        description: { type: "string" },
+        logo_url: { type: "string" },
+        video_url: { type: "string" },
+        screenshots: { type: "array", items: { type: "object" } },
+        hidden: { type: "boolean" },
+        verify: { type: "boolean" },
+      },
+      required: ["product"],
     },
   },
   {
-    name: "sync_coupons",
-    description: "Fetch coupons from Stripe again with the stored restricted key. Does not publish them.",
-    inputSchema: { type: "object", properties: {} },
+    name: "connect_coupon_provider",
+    description: "Connect or replace a billing read key and import, or omit token to sync.",
+    annotations: destructive("Connect coupon provider"),
+    inputSchema: {
+      type: "object",
+      properties: {
+        product: { type: "string" },
+        provider: { type: "string" },
+        token: { type: "string" },
+        product_ids: { type: "array", items: { type: "string" } },
+      },
+      required: ["product"],
+    },
   },
   {
     name: "publish_coupon",
-    description: "Publish one imported coupon so seekers can claim it. product is the listing slug. A coupon Stripe limited to product ids can only be published on a listing that carries one of those ids. Omit product only when every matching listing should get it.",
+    description: "Publish or unpublish one imported coupon.",
+    annotations: destructive("Publish coupon"),
     inputSchema: {
       type: "object",
-      properties: {
-        coupon_id: { type: "string" },
-        product: { type: "string", description: "Product slug." },
-      },
+      properties: { coupon_id: { type: "string" }, published: { type: "boolean" }, claim_limit: { type: "number" } },
       required: ["coupon_id"],
     },
   },
   {
-    name: "list_wishes",
-    description: "List wishes for a product slug or a category slug.",
-    inputSchema: {
-      type: "object",
-      properties: { product: { type: "string" }, category: { type: "string" } },
-    },
-  },
-  {
-    name: "create_wish",
-    description: "File a wish on a product or an open wish in a category.",
+    name: "connect_proof_point",
+    description: "Connect a proof-point provider and run the first read.",
+    annotations: destructive("Connect proof point"),
     inputSchema: {
       type: "object",
       properties: {
-        body: { type: "string" },
         product: { type: "string" },
-        category: { type: "string" },
-        target_percent: { type: "number" },
-        target_months: { type: "number" },
+        provider: { type: "string" },
+        token: { type: "string" },
+        cadence: { type: "string" },
+        points: { type: "array", items: { type: "object" } },
+        monitor_id: { type: "string" },
+        region: { type: "string" },
+        canary_name: { type: "string" },
+        check_id: { type: "string" },
+        property_id: { type: "string" },
       },
-      required: ["body"],
+      required: ["product", "provider", "token", "cadence", "points"],
     },
   },
   {
-    name: "list_categories",
-    description: "List category slugs a product or an open wish can use.",
-    inputSchema: { type: "object", properties: {} },
+    name: "update_proof_config",
+    description: "Change proof config: sync, disconnect, cadence, mode, or order.",
+    annotations: destructive("Update proof config"),
+    inputSchema: {
+      type: "object",
+      properties: {
+        product: { type: "string" },
+        action: { type: "string" },
+        provider: { type: "string" },
+        cadence: { type: "string" },
+        point_id: { type: "string" },
+        display_mode: { type: "string" },
+        direction: { type: "string" },
+      },
+      required: ["product", "action"],
+    },
+  },
+  {
+    name: "create_review",
+    description: "Post a review or a reply (pass review_id).",
+    annotations: destructive("Create review"),
+    inputSchema: {
+      type: "object",
+      properties: {
+        product: { type: "string" },
+        stars: { type: "number" },
+        body: { type: "string" },
+        review_id: { type: "string" },
+      },
+      required: ["product", "body"],
+    },
+  },
+  {
+    name: "submit_feedback",
+    description: "Send a feature, issue, or friction report.",
+    annotations: destructive("Submit feedback"),
+    inputSchema: {
+      type: "object",
+      properties: {
+        kind: { type: "string" },
+        body: { type: "string" },
+        context: { type: "string" },
+      },
+      required: ["kind", "body"],
+    },
   },
 ];
 
@@ -135,7 +219,7 @@ async function api(path, { method = "GET", body, auth = false } = {}) {
   return payload;
 }
 
-const publicTools = new Set(["search_offers", "get_offer", "list_wishes", "list_categories"]);
+const publicTools = new Set(["search_offers", "list_categories", "list_wishes"]);
 let allowedNames;
 
 async function visibleTools() {
@@ -150,35 +234,51 @@ async function visibleTools() {
 async function callTool(name, args) {
   switch (name) {
     case "search_offers": {
+      if (args.id) return api(`/api/v1/offers/${encodeURIComponent(args.id)}`);
       const params = new URLSearchParams();
       if (args.q) params.set("q", args.q);
       if (args.category) params.set("category", args.category);
       return api(`/api/v1/offers?${params}`);
     }
-    case "get_offer":
-      return api(`/api/v1/offers/${encodeURIComponent(args.id)}`);
     case "reveal_offer":
       return api(`/api/v1/offers/${encodeURIComponent(args.id)}/reveal`, { method: "POST", auth: true, body: {} });
-    case "list_my_coupons":
-      return api("/api/v1/stripe", { auth: true });
-    case "submit_product":
-      return api("/api/v1/products", { method: "POST", auth: true, body: args });
-    case "connect_stripe":
-      return api("/api/v1/stripe", { method: "POST", auth: true, body: { restricted_key: args.restricted_key } });
-    case "sync_coupons":
-      return api("/api/v1/stripe", { method: "POST", auth: true, body: {} });
-    case "publish_coupon":
-      return api("/api/v1/stripe/publish", { method: "POST", auth: true, body: args });
+    case "get_product":
+      return api(`/api/v1/products/${encodeURIComponent(args.slug)}`, { auth: true });
+    case "list_categories":
+      return api("/api/v1/categories");
     case "list_wishes": {
       const params = new URLSearchParams();
       if (args.product) params.set("product", args.product);
       if (args.category) params.set("category", args.category);
-      return api(`/api/v1/wishes?${params}`);
+      if (args.mine) params.set("mine", "1");
+      return api(`/api/v1/wishes?${params}`, { auth: Boolean(args.mine) });
     }
-    case "create_wish":
-      return api("/api/v1/wishes", { method: "POST", auth: true, body: args });
-    case "list_categories":
-      return api("/api/v1/categories");
+    case "list_my_coupons":
+      return api(`/api/v1/products/${encodeURIComponent(args.product)}/coupons`, { auth: true });
+    case "submit_product":
+      return api("/api/v1/products", { method: "POST", auth: true, body: args });
+    case "update_product": {
+      const { product, ...body } = args;
+      return api(`/api/v1/products/${encodeURIComponent(product)}`, { method: "PATCH", auth: true, body });
+    }
+    case "connect_coupon_provider": {
+      const { product, ...body } = args;
+      return api(`/api/v1/products/${encodeURIComponent(product)}/coupons`, { method: "POST", auth: true, body });
+    }
+    case "publish_coupon":
+      return api("/api/v1/coupons/publish", { method: "POST", auth: true, body: args });
+    case "connect_proof_point": {
+      const { product, ...body } = args;
+      return api(`/api/v1/products/${encodeURIComponent(product)}/proof-points`, { method: "POST", auth: true, body });
+    }
+    case "update_proof_config": {
+      const { product, ...body } = args;
+      return api(`/api/v1/products/${encodeURIComponent(product)}/proof-points`, { method: "POST", auth: true, body });
+    }
+    case "create_review":
+      return api("/api/v1/reviews", { method: "POST", auth: true, body: args });
+    case "submit_feedback":
+      return api("/api/v1/feedback", { method: "POST", auth: true, body: args });
     default:
       throw new Error(`Unknown tool ${name}`);
   }
@@ -202,9 +302,11 @@ async function handle(message) {
   const { id, method, params } = message;
   if (method === "initialize") {
     result(id, {
-      protocolVersion: params?.protocolVersion || "2024-11-05",
+      protocolVersion: params?.protocolVersion || "2025-03-26",
       capabilities: { tools: {} },
-      serverInfo: { name: "dealpuffin", version: "0.1.0" },
+      serverInfo: { name: "dealpuffin", version: "0.2.0" },
+      instructions:
+        "Prefer the remote MCP at https://mcp.dealpuffin.com/mcp. This stdio server proxies /api/v1. search_offers never returns a code; reveal_offer does and is one claim.",
     });
     return;
   }
