@@ -1,6 +1,6 @@
 # Dealpuffin agent
 
-Skill and optional stdio MCP proxy for Dealpuffin. Prefer the remote server at `https://mcp.dealpuffin.com/mcp`.
+Skill and plugin for Dealpuffin, connected to the remote MCP server at `https://mcp.dealpuffin.com/mcp`.
 
 Fourteen workflow tools cover seeking deals, managing listings, billing, proof points, and reviews. Filing wishes is website-only.
 
@@ -52,7 +52,11 @@ Or an API key:
 }
 ```
 
-A local stdio proxy is in `mcp/server.js` for hosts that cannot open a remote URL. Set `DEALPUFFIN_TOKEN`. Prefer the remote MCP when possible.
+Hosts that only speak stdio can reach the same URL through an MCP bridge such as `mcp-remote`.
+
+## What the skill fetches and runs
+
+The skill checks for a newer version once per session: it reads `skills/dealpuffin/SKILL.md` from `raw.githubusercontent.com/dealpuffin/agent/main` and compares `metadata.version`. When you installed it with `npx skills`, a newer version triggers `npx skills update dealpuffin -g -y`. Inside the Claude plugin this check is skipped, and the plugin manager handles updates. The skill sends no data anywhere else. Its tools call the Dealpuffin MCP server, and `reveal_offer` counts as one claim. The skill never logs or repeats billing keys; they appear only in the `connect_coupon_provider` call.
 
 ## License
 
