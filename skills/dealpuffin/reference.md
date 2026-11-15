@@ -14,7 +14,7 @@ Fourteen tools. Read tools are annotated read-only; write tools are destructive 
 | `list_categories` | no | Subcategory slugs for submit/update. |
 | `list_wishes` | category/product no; `mine` yes | Demand signal. Filing wishes is website-only. |
 | `list_my_coupons` | yes | Owner imports with codes + reasons. |
-| `submit_product` | yes | Create listing from `url` + category. Optional `free_for_now`. Ownership DNS verify is optional. |
+| `submit_product` | yes | Create listing from `url` + category. Name, title, description, `logo_url`, `video_url`, and `screenshots` (up to 5) autofill from the page when omitted; `screenshots` takes `[{ data }]` (base64/data URL, JPEG/PNG/GIF/WebP, 10 MB), `[]` or `video_url: ""` skips. Returns `video_url` and `screenshot_count`. Optional `free_for_now`. Ownership DNS verify is optional. `POST /api/v1/products` |
 | `update_product` | yes | Patch listing; optional `hidden`, `free_for_now`, `verify`, screenshots, video_url, `badge_page_url`, `verify_badge`. Owner `get_product` includes `badge` and `free_for_now`. `PATCH /api/v1/products/:slug` |
 | `connect_coupon_provider` | yes | Connect/replace key + import, or omit `token` to sync. |
 | `publish_coupon` | yes | `coupon_id`, optional `published`, `claim_limit`. |

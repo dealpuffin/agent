@@ -3,7 +3,7 @@
   "name": "com.dealpuffin/mcp",
   "title": "Dealpuffin",
   "description": "Find live SaaS coupons, or list and manage your product's coupons and proof points on Dealpuffin.",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "websiteUrl": "https://dealpuffin.com",
   "repository": {
     "url": "https://github.com/dealpuffin/agent",
