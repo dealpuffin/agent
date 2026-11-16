@@ -63,3 +63,5 @@ The skill checks for a newer version once per session: it reads `skills/dealpuff
 MIT. See [LICENSE](LICENSE).
 
 [![M8ven Score](https://m8ven.ai/badge/mcp/dealpuffin-agent-rzsqp8?v=dd9c4b6439c278101ecb3d967b668b76)](https://m8ven.ai/mcp/dealpuffin-agent-rzsqp8?s=readme)
+
+[![mcptry](https://mcptry.com/badge/com.dealpuffin/mcp)](https://mcptry.com/servers/com.dealpuffin/mcp)
