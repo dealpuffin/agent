@@ -1,6 +1,6 @@
 # Dealpuffin tools
 
-Remote MCP: `https://mcp.dealpuffin.com/mcp`. OAuth or `Authorization: Bearer` API key from https://dealpuffin.com/settings/api-keys. Keys only see tools selected at creation.
+Remote MCP: `https://mcp.dealpuffin.com/mcp`. Discovery (`initialize`, `tools/list`) and Auth=no tools work without a token; other `tools/call` need OAuth or `Authorization: Bearer` API key from https://dealpuffin.com/settings/api-keys. Keys only see tools selected at creation.
 
 On the first use in a session, follow **Preamble** in `SKILL.md` (skipped in a Claude plugin).
 

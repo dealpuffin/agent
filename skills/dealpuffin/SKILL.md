@@ -7,7 +7,7 @@ description: >-
   points, or leave a product review. On first use in a session, follow the
   Preamble so the installed copy matches metadata.version on main.
 metadata:
-  version: 1.1.6
+  version: 1.1.8
   homepage: "https://dealpuffin.com"
   source: "https://github.com/dealpuffin/agent"
 ---
@@ -38,7 +38,7 @@ Bump `metadata.version` by the **patch** digit only on each published skill chan
 
 Deals are coupons Dealpuffin synced from the founder’s billing provider. Proof points are readings from a provider. Do not invent a discount, code, or figure.
 
-Connect to `https://mcp.dealpuffin.com/mcp` (OAuth or API key from https://dealpuffin.com/settings/api-keys). A key exposes only the tools turned on at creation. If a needed tool is missing, name it and stop.
+Connect to `https://mcp.dealpuffin.com/mcp`. `initialize`, `tools/list`, `search_offers`, `list_categories`, and public `list_wishes` work without a token. Reveal and founder tools need OAuth or an API key from https://dealpuffin.com/settings/api-keys. A key exposes only the tools turned on at creation. If a needed tool is missing, name it and stop.
 
 Policy detail and every tool contract: [reference.md](reference.md).
 
@@ -56,7 +56,7 @@ Filing wishes is website-only. Use `list_wishes` to read demand; do not invent a
 1. `list_categories`, then `submit_product` with https `url` and a subcategory (`other-software` if nothing fits). Name, title, description, logo, `video_url` (first YouTube/Vimeo/Loom on the page), and up to 5 screenshots autofill from the page; pass any of them to override, `video_url: ""` or `screenshots: []` to skip. The result includes `video_url` and `screenshot_count` — tell the founder what was picked and that they can change it with `update_product`. Pass `free_for_now: true` when the product is free today (zero MRR then shows as Free for now). Ownership DNS verify is optional — listings are public on https while pending; `verify: true` later adds a Verified catalog tag.
 2. Billing: ask for a read key — Stripe `rk_` (refuse `sk_`), Paddle `pdl_*` with `discount.read`, Polar `polar_oat_` with `discounts:read`, Lemon Squeezy API key (`store_id` if multi-store), Dodo `dodo_live_` / `dodo_test_` with Discounts read, or RevenueCat V2 secret with `discounts:read` (`project_id` if multi-project). `connect_coupon_provider` with `product`, `provider`, `token`. Omit `token` later to sync again. Do not log or echo the key.
 3. Read returned eligibility. `publish_coupon` with `coupon_id` for coupons to list; `published: false` unpublishes; optional `claim_limit`.
-4. Listing copy/media: `get_product`, then `update_product` with only changed fields. Screenshots: pass full set when changing — `{ id }` keep, `{ data }` upload base64/data URL. `hidden` toggles catalog visibility. `free_for_now` updates the free flag. `verify: true` re-checks DNS ownership (optional quality).
+4. Listing copy/media: `get_product`, then `update_product` with only changed fields. Screenshots: pass full set when changing — `{ id }` keep, `{ data }` upload base64/data URL. `hidden` toggles catalog visibility. `free_for_now` updates the free flag. When pending, owner payloads include `dns` and `http` instructions; `verify: true` re-checks either method (optional quality).
 5. Optional Featured on Dealpuffin badge: owner `get_product` includes `badge.snippet`. Have the founder (or you) paste it on their site, then `update_product` with `verify_badge: true` (optional `badge_page_url` if not on the homepage). Catalog highlight applies only while the crawl finds the badge. After submit, Dealpuffin also emails the founder a badge nudge with the agent prompt and `/list/{slug}?tab=badge`.
 
 ## Proof points
